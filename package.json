@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eea/eea-countup.git"
+    "url": "git@github.com:eea/eea-countup.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -16,7 +16,7 @@
   "keywords": [
     "react"
   ],
-  "author": "EEA",
+  "author": "European Environment Agency: IDM2 A-Team",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/eea/eea-countup/issues"
