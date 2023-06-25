@@ -1,7 +1,7 @@
 {
-  "name": "@diballesteros/useless-hooks",
+  "name": "@eeacms/eea-countup",
   "version": "1.0.11",
-  "description": "A group of useless react hooks",
+  "description": "A countup component for EEA",
   "main": "index.js",
   "scripts": {
     "test": "exit 0"
@@ -16,7 +16,7 @@
   "keywords": [
     "react"
   ],
-  "author": "Diego Ballesteros",
+  "author": "EEA",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/eea/eea-countup/issues"
