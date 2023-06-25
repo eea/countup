@@ -1,0 +1,25 @@
+{
+  "name": "@diballesteros/useless-hooks",
+  "version": "1.0.11",
+  "description": "A group of useless react hooks",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eea/eea-countup.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Diego Ballesteros",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eea/eea-countup/issues"
+  },
+  "homepage": "https://github.com/eea/eea-countup#readme"
+}
