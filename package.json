@@ -7,6 +7,14 @@
     "test": "exit 0",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "pre-commit": "yarn stylelint:fix && yarn prettier:fix && yarn lint:fix",
+    "stylelint": "make stylelint",
+    "stylelint:overrides": "make stylelint-overrides",
+    "stylelint:fix": "make stylelint-fix",
+    "prettier": "make prettier",
+    "prettier:fix": "make prettier-fix",
+    "lint": "make lint",
+    "lint:fix": "make lint-fix",
     "release": "release-it",
     "release-major-beta": "release-it major --preRelease=beta",
     "release-beta": "release-it --preRelease=beta"
@@ -16,6 +24,7 @@
     "url": "git@github.com:eea/eea-countup.git"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.5.4",
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@storybook/addon-essentials": "^7.0.23",
@@ -26,6 +35,8 @@
     "@storybook/react-webpack5": "^7.0.23",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react": "^18.2.14",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react": "^7.32.2",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -41,6 +52,9 @@
   },
   "homepage": "https://github.com/eea/eea-countup#readme",
   "dependencies": {
+    "eslint": "^8.43.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "npm": "^9.7.2",
     "release-it": "^15.11.0"
   }
