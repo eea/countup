@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 function CountUp({ end, duration, decimals, prefix, suffix, children }) {
   const [counter, setCounter] = useState(0);

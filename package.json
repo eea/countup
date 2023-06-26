@@ -19,12 +19,68 @@
     "release-major-beta": "release-it major --preRelease=beta",
     "release-beta": "release-it --preRelease=beta"
   },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-idiomatic-order"
+    ],
+    "plugins": [
+      "stylelint-prettier"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**/*.scss"
+        ],
+        "customSyntax": "postcss-scss"
+      },
+      {
+        "files": [
+          "**/*.less"
+        ],
+        "customSyntax": "postcss-less"
+      },
+      {
+        "files": [
+          "**/*.overrides"
+        ],
+        "customSyntax": "postcss-less"
+      }
+    ],
+    "rules": {
+      "prettier/prettier": true,
+      "rule-empty-line-before": [
+        "always-multi-line",
+        {
+          "except": [
+            "first-nested"
+          ],
+          "ignore": [
+            "after-comment"
+          ]
+        }
+      ]
+    },
+    "ignoreFiles": "theme/themes/default/**/*.overrides"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.overrides",
+        "options": {
+          "parser": "less"
+        }
+      }
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/eea-countup.git"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.5.4",
+    "@babel/plugin-proposal-private-property-in-object": "*",
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@storybook/addon-essentials": "^7.0.23",
@@ -56,6 +112,8 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
     "npm": "^9.7.2",
-    "release-it": "^15.11.0"
+    "release-it": "^15.11.0",
+    "stylelint": "^15.9.0",
+    "stylelint-config-standard-scss": "^9.0.0"
   }
 }
