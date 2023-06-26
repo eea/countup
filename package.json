@@ -1,19 +1,19 @@
 {
-  "name": "@eeacms/eea-countup",
+  "name": "@eeacms/countup",
   "version": "1.0.11",
   "description": "A countup component for EEA",
   "main": "index.js",
   "scripts": {
     "test": "exit 0",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "release": "release-it",
+    "release-major-beta": "release-it major --preRelease=beta",
+    "release-beta": "release-it --preRelease=beta"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/eea-countup.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.5",
@@ -39,5 +39,9 @@
   "bugs": {
     "url": "https://github.com/eea/eea-countup/issues"
   },
-  "homepage": "https://github.com/eea/eea-countup#readme"
+  "homepage": "https://github.com/eea/eea-countup#readme",
+  "dependencies": {
+    "npm": "^9.7.2",
+    "release-it": "^15.11.0"
+  }
 }
