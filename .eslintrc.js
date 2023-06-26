@@ -50,7 +50,8 @@ module.exports = {
   },
   plugins: ['react', 'prettier'],
   rules: {
-    'import/no-unresolved': [2, { devDependencies: true }],
+    'import/no-unresolved': 1,
+
     'no-alert': 1,
     'no-console': 1,
     'no-debugger': 1,
