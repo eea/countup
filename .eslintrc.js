@@ -16,23 +16,7 @@ module.exports = {
       legacyDecorators: true,
     },
   },
-  settings: {
-    'import/resolver': {
-      alias: {
-        map: [
-          ['@plone/volto', './src'],
-          ['@plone/volto-slate', './packages/volto-slate/src'],
-          ['@package', './src'],
-          ['@root', './src'],
-        ],
-        extensions: ['.js', '.jsx', '.json'],
-      },
-      'babel-plugin-root-import': {
-        rootPathSuffix: 'src',
-      },
-    },
-    'import/core-modules': ['load-volto-addons'],
-  },
+
   overrides: [
     {
       env: {
@@ -51,7 +35,6 @@ module.exports = {
   plugins: ['react', 'prettier'],
   rules: {
     'import/no-unresolved': 1,
-
     'no-alert': 1,
     'no-console': 1,
     'no-debugger': 1,
