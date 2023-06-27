@@ -1,1 +1,1 @@
-export { default as Countup } from "./src/Countup";
+export { default as Countup } from './src/Countup';
