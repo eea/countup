@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/countup",
-  "version": "0.3.0-beta",
+  "version": "0.3.1-beta",
   "description": "A countup component for EEA",
   "main": "dist/index.js",
   "scripts": {
@@ -11,6 +11,7 @@
     "build-storybook": "storybook build",
     "pre-commit": "yarn stylelint:fix && yarn prettier:fix && yarn lint:fix",
     "stylelint": "make stylelint",
+    "prepublish": "npm run compile",
     "stylelint:overrides": "make stylelint-overrides",
     "stylelint:fix": "make stylelint-fix",
     "prettier": "make prettier",
