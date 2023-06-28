@@ -1,6 +1,7 @@
 pipeline {
   agent any
-
+  tools {nodejs "node16"}
+  
   environment {
         GIT_NAME = "countup"
         NAMESPACE = "@eeacms"
