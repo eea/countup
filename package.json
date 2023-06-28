@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/countup",
-  "version": "0.2.9-beta",
+  "version": "0.3.0-beta",
   "description": "A countup component for EEA",
   "main": "dist/index.js",
   "scripts": {
