@@ -13,6 +13,6 @@
   },
   "hooks": {
     "after:bump": "npx auto-changelog --commit-limit false -p",
-    "before:init": ["npm run compile"]
+    "before:init": ["npm run compile", "console.log('am rulat')"]
   }
 }
