@@ -1,6 +1,7 @@
 .vscode/
 .history
 .nyc_output
+dist/
 project
 coverage
 logs
@@ -15,7 +16,7 @@ website/.yarn/*
 
 node_modules
 build
-dist
+
 cypress/videos
 cypress/reports
 screenshots
