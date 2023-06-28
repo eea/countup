@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function CountUp({ end, duration, decimals, prefix, suffix, children }) {
+function CountUp({
+  end,
+  duration,
+  decimals,
+  prefix = '',
+  suffix = '',
+  children = <></>,
+}) {
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
