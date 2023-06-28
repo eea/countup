@@ -1,8 +1,8 @@
-import Countup from "../src/Countup";
+import Countup from '../src/components/Countup';
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 export default {
-  title: "Example/Countup",
+  title: 'Example/Countup',
   component: Countup,
 };
 
@@ -12,7 +12,7 @@ export const Primary = {
     end: 15,
     duration: 12,
     decimals: 1,
-    prefix: "",
-    suffix: "EURO",
+    prefix: '',
+    suffix: 'EURO',
   },
 };
