@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/countup",
-  "version": "0.3.5-beta",
+  "version": "0.3.6-beta",
   "description": "A countup component for EEA",
   "main": "dist/index.js",
   "scripts": {
@@ -76,6 +76,9 @@
         }
       }
     ]
+  },
+  "engines": {
+    "node": ">=16"
   },
   "repository": {
     "type": "git",
