@@ -1,6 +1,6 @@
 pipeline {
   agent any
-  tools {nodejs16 "NodeJS16"}
+  tools {nodejs "NodeJS16"}
 
   environment {
         GIT_NAME = "countup"
@@ -13,7 +13,7 @@ pipeline {
   stages {
 
     stage('Release') {
-       tool name: 'nodejs16'
+       tool name: 'nodejs'
       when {
         allOf {
           environment name: 'CHANGE_ID', value: ''
