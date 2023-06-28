@@ -1,11 +1,13 @@
 {
   "name": "@eeacms/countup",
-  "version": "0.2.3-beta",
+  "version": "0.2.4-beta",
   "description": "A countup component for EEA",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "exit 0",
     "storybook": "storybook dev -p 6006",
+    "clean": "rimraf dist",
+    "compile": "npm run clean && cross-env NODE_ENV=production babel src/components --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,stories.js,__snapshots__",
     "build-storybook": "storybook build",
     "pre-commit": "yarn stylelint:fix && yarn prettier:fix && yarn lint:fix",
     "stylelint": "make stylelint",
@@ -78,7 +80,12 @@
     "type": "git",
     "url": "git@github.com:eea/eea-countup.git"
   },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
   "devDependencies": {
+    "@babel/cli": "^7.22.5",
     "@babel/eslint-parser": "^7.5.4",
     "@babel/plugin-proposal-private-property-in-object": "*",
     "@babel/preset-env": "^7.22.5",
@@ -91,12 +98,11 @@
     "@storybook/react-webpack5": "^7.0.23",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react": "^18.2.14",
+    "cross-env": "^7.0.3",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-react": "^7.32.2",
     "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "storybook": "^7.0.23"
   },
   "browserslist": [
