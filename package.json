@@ -99,6 +99,11 @@
     "react-dom": "^18.2.0",
     "storybook": "^7.0.23"
   },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "keywords": [
     "react"
   ],
