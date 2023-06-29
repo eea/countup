@@ -76,6 +76,9 @@
       }
     ]
   },
+  "engines": {
+    "node": ">=16"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/eea-countup.git"
@@ -117,6 +120,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
     "npm": "^9.7.2",
+    "prettier": "^2.8.8",
     "react": "^18.2.0",
     "release-it": "^15.11.0",
     "stylelint": "^15.9.0",

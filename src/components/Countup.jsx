@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function CountUp({
+function Countup({
   end,
   duration,
   decimals,
@@ -39,4 +39,4 @@ function CountUp({
   );
 }
 
-export default CountUp;
+export default Countup;
