@@ -28,11 +28,7 @@ module.exports = {
       },
     },
   ],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
-  plugins: ['react', 'prettier'],
+
   rules: {
     'import/no-unresolved': 1,
     'no-alert': 1,
