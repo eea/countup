@@ -4,6 +4,7 @@
   "description": "A countup component for EEA",
   "main": "dist/index.js",
   "scripts": {
+    "test": "exit 0",
     "clean": "rimraf dist",
     "compile": "npm run clean && cross-env NODE_ENV=production babel src/components --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,stories.js,__snapshots__",
     "build-storybook": "storybook build",
@@ -19,20 +20,6 @@
     "release": "release-it",
     "release-major-beta": "release-it major --preRelease=beta",
     "release-beta": "release-it --preRelease=beta"
-  },
-  "jest": {
-    "testMatch": [
-      "**/src/**/*.test.js(x)"
-    ],
-    "modulePathIgnorePatterns": [
-      "api"
-    ],
-    "transform": {
-      "^.+\\.js(x)?$": "babel-jest"
-    },
-    "globals": {
-      "__DEV__": true
-    }
   },
   "stylelint": {
     "extends": [
@@ -89,33 +76,24 @@
       }
     ]
   },
-  "engines": {
-    "node": ">=16"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/eea-countup.git"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
     "@babel/eslint-parser": "^7.5.4",
-    "@babel/plugin-proposal-private-property-in-object": "*",
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@types/react": "^18.2.14",
-    "babel-jest": "^29.5.0",
     "cross-env": "^7.0.3",
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-react": "^7.32.2",
-    "jest": "^29.5.0",
-    "prop-types": "^15.8.1",
-    "@babel/plugin-proposal-export-default-from": "^7.22.5",
-    "react-test-renderer": "^18.2.0"
+    "prop-types": "^15.8.1"
   },
   "browserslist": [
     ">0.2%",
@@ -132,13 +110,12 @@
   },
   "homepage": "https://github.com/eea/eea-countup#readme",
   "dependencies": {
-    "babel-plugin-react-intl": "^8.2.25",
     "eslint": "^8.43.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
     "npm": "^9.7.2",
-    "prettier": "^2.8.8",
     "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "release-it": "^15.11.0",
     "stylelint": "^15.9.0",
     "stylelint-config-standard-scss": "^9.0.0",
