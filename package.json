@@ -1,6 +1,6 @@
 {
-  "name": "countup-bun",
-  "version": "0.4.0-beta",
+  "name": "@eeacms/countup",
+  "version": "0.4.1-beta",
   "description": "Made with create-react-library",
   "author": "eea",
   "license": "MIT",
