@@ -1,10 +1,5 @@
 {
-  "settings": {
-    "import/resolver": {
-      "alias": {
-        "map": [["@components", "./src/components/"]],
-        "extensions": [".js", ".jsx"]
-      }
-    }
+  "rules": {
+    "import/no-unresolved": [2, { "devDependencies": true }]
   }
 }
