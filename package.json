@@ -30,15 +30,11 @@
     "@babel/plugin-proposal-export-default-from": "*"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
-    "cross-env": "^7.0.3",
-    "prop-types": "^15.8.1",
-    "@cypress/code-coverage": "^3.10.0",
     "@plone/scripts": "*",
+    "@cypress/code-coverage": "^3.10.0",
+    "cypress-fail-fast": "^5.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "md5": "^2.3.0",
-    "postcss-less": "6.0.0",
-    "@plone/volto": "*"
+    "md5": "^2.3.0"
   },
   "browserslist": [
     ">0.2%",
@@ -53,12 +49,5 @@
   "bugs": {
     "url": "https://github.com/eea/eea-countup/issues"
   },
-  "homepage": "https://github.com/eea/eea-countup#readme",
-  "dependencies": {
-    "npm": "^9.7.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "release-it": "^15.11.0",
-    "stylelint": "^15.9.0"
-  }
+  "homepage": "https://github.com/eea/eea-countup#readme"
 }
