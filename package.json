@@ -4,7 +4,6 @@
   "description": "Made with create-react-library",
   "author": "eea",
   "license": "MIT",
-  "repository": "eea/countup-bun",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
@@ -25,6 +24,10 @@
     "lint": "make lint",
     "lint:fix": "make lint-fix",
     "prepublish": "npm run prepare"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:eea/eea-countup.git"
   },
   "prettier": {
     "trailingComma": "all",
