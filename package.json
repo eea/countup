@@ -1,51 +1,34 @@
 {
-  "name": "@eeacms/countup",
-  "version": "0.3.9-beta",
-  "description": "A countup component for EEA",
+  "name": "countup-bun",
+  "version": "0.4.0-beta",
+  "description": "Made with create-react-library",
+  "author": "eea",
+  "license": "MIT",
   "main": "dist/index.js",
+  "module": "dist/index.modern.js",
+  "source": "src/index.js",
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
-    "test": "exit 0",
-    "clean": "rimraf dist",
-    "compile": "npm run clean && cross-env NODE_ENV=production babel src/components --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,stories.js,__snapshots__",
-    "build-storybook": "storybook build",
-    "pre-commit": "yarn stylelint:fix && yarn prettier:fix && yarn lint:fix",
-    "stylelint": "make stylelint",
-    "prepublish": "npm run compile",
-    "stylelint:overrides": "make stylelint-overrides",
-    "stylelint:fix": "make stylelint-fix",
-    "prettier": "make prettier",
-    "prettier:fix": "make prettier-fix",
+    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "prepare": "run-s build",
+    "test": "run-s test:unit test:lint test:build",
+    "test:build": "run-s build",
+    "test:lint": "eslint .",
+    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
+    "test:watch": "react-scripts test --env=jsdom",
+    "predeploy": "cd example && yarn install && yarn run build",
+    "deploy": "gh-pages -d example/build",
     "lint": "make lint",
     "lint:fix": "make lint-fix",
-    "release": "release-it",
-    "release-major-beta": "release-it major --preRelease=beta",
-    "release-beta": "release-it --preRelease=beta"
+    "prepublish": "npm run prepare"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/eea-countup.git"
   },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "@babel/plugin-proposal-export-default-from": "*"
-  },
-  "devDependencies": {
-    "@plone/scripts": "*",
-    "@cypress/code-coverage": "^3.10.0",
-    "cypress-fail-fast": "^5.0.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "md5": "^2.3.0",
-    "cross-env": "^7.0.3",
-    "@babel/cli": "^7.22.5"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ],
-  "keywords": [
-    "react"
-  ],
   "prettier": {
     "trailingComma": "all",
     "singleQuote": true,
@@ -101,10 +84,37 @@
     },
     "ignoreFiles": "theme/themes/default/**/*.overrides"
   },
-  "author": "European Environment Agency: IDM2 A-Team",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/eea/eea-countup/issues"
+  "peerDependencies": {
+    "react": "^16.0.0"
   },
-  "homepage": "https://github.com/eea/eea-countup#readme"
+  "devDependencies": {
+    "microbundle-crl": "^0.13.10",
+    "babel-eslint": "^10.0.3",
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-config-standard-react": "^9.2.0",
+    "@cypress/code-coverage": "^3.10.0",
+    "@plone/scripts": "*",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "md5": "^2.3.0",
+    "postcss-less": "6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-import-resolver-alias": "*",
+    "eslint-plugin-standard": "^4.0.1",
+    "gh-pages": "^2.2.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.1"
+  },
+  "files": [
+    "dist"
+  ]
 }
