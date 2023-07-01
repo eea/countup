@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 
 DIR=$(shell basename $$(pwd))
-ADDON ?= "@eeacms/volto-eea-website-theme"
+ADDON ?= "@eeacms/countup"
 
 # We like colors
 # From: https://coderwall.com/p/izxssa/colored-makefile-for-golang-projects

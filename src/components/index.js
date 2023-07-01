@@ -1,3 +1,3 @@
-import Countup from './Countup';
+import Countup from './Countup.jsx';
 
 export { Countup };
