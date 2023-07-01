@@ -2,7 +2,7 @@
   "name": "@eeacms/countup",
   "version": "0.3.7-beta",
   "description": "A countup component for EEA",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "exit 0",
     "clean": "rimraf dist",
@@ -82,7 +82,7 @@
   },
   "peerDependencies": {
     "react": "^18.2.0",
-    "@babel/plugin-proposal-export-default-from":"*"
+    "@babel/plugin-proposal-export-default-from": "*"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
@@ -94,7 +94,12 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-react": "^7.32.2",
-    "prop-types": "^15.8.1"
+    "prop-types": "^15.8.1",
+    "@cypress/code-coverage": "^3.10.0",
+    "@plone/scripts": "*",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "md5": "^2.3.0",
+    "postcss-less": "6.0.0"
   },
   "browserslist": [
     ">0.2%",
