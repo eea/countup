@@ -81,7 +81,8 @@
     "url": "git@github.com:eea/eea-countup.git"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@babel/plugin-proposal-export-default-from":"*"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
