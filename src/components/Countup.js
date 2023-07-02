@@ -25,7 +25,7 @@ function Countup({
       if (start < end) start += increment;
       else start -= increment;
       setCounter(start.toFixed(decimals));
-      if (Math.abs(start - end) < increment) clearInterval(timer);
+      if (Math.abs(start - end) <= increment) clearInterval(timer);
     }, incrementTime);
     return () => clearInterval(timer);
   }, [duration, end, decimals]);
