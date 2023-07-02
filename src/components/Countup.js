@@ -31,7 +31,7 @@ function Countup({
   }, [duration, end, decimals]);
 
   return (
-    <div>
+    <div data-testid="eea-countup">
       {prefix}
       {counter}
       {suffix} {children}

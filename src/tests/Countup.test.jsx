@@ -1,16 +1,16 @@
 import Countup from '../components/Countup';
-import { render } from '@testing-library/react';
-
+import { render, screen } from '@testing-library/react';
 describe('Test Countup', () => {
-  const countup = render(
-    <Countup end={15} duration={10} prefix="" suffix="">
+  jest.useFakeTimers();
+
+  render(
+    <Countup end={15} duration={10} prefix="test" suffix="jest">
       {' '}
     </Countup>,
   );
-
-  setTimeout(() => {
-    test('Countup end value', () => {
-      expect(countup).toHaveTextContent(15);
-    });
-  }, 1500);
+  it('check end value', () => {
+    setTimeout(() => {
+      expect(screen.getByText('test15jest')).toBeInTheDocument();
+    }, 15000);
+  });
 });
