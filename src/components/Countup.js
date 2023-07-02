@@ -16,7 +16,7 @@ function Countup({
     if (decimals > 0) {
       increment /= Math.pow(10, decimals);
     }
-    if (Math.abs(start - end) < increment) return;
+    if (Math.abs(start - end) <= increment) return;
 
     let totalMilSecDur = parseInt(duration);
     let incrementTime =
