@@ -38,6 +38,7 @@ function useCountup() {
           increment /= Math.pow(10, decimals);
         }
         if (Math.abs(start - end) <= increment / 10) return;
+        console.log(start);
         var totalMilSecDur = parseInt(duration);
         var incrementTime = totalMilSecDur / Math.abs(end * Math.pow(10, decimals || 0)) * 1000;
         var timer = setInterval(function () {
@@ -51,7 +52,7 @@ function useCountup() {
         return function () {
           return clearInterval(timer);
         };
-      }, [duration, end, decimals]);
+      }, [duration, end, decimals, paused]);
       return /*#__PURE__*/React.createElement("div", null, prefix, counter, suffix, " ", children);
     }
   };
