@@ -44,9 +44,12 @@ function useCountup() {
         var totalMilSecDur = parseInt(duration);
         var incrementTime = totalMilSecDur / Math.abs(end * Math.pow(10, decimals || 0)) * 1000;
         var timer = setInterval(function () {
-          if (start < end) start += increment;else start -= increment;
-          setCounter(start.toFixed(decimals));
-          if (Math.abs(start - end) <= increment / 10) clearInterval(timer);
+          if (!paused) {
+            if (start < end) start += increment;else start -= increment;
+            setCounter(start.toFixed(decimals));
+            if (Math.abs(start - end) <= increment / 10) clearInterval(timer);
+            console.log(start);
+          }
         }, incrementTime);
         return function () {
           return clearInterval(timer);
