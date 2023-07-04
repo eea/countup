@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom'
-import { CountUp } from '../src/index'
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import { CountUp } from '../src/index';
 
 const Count = () => {
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(true);
 
   return (
     <div>
@@ -25,7 +25,7 @@ const Count = () => {
         Toggle Playing
       </button>
     </div>
-  )
-}
+  );
+};
 
-ReactDOM.render(<Count />, document.querySelector('#root'))
+ReactDOM.render(<Count />, document.querySelector('#root'));

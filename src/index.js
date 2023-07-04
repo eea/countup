@@ -1,8 +1,8 @@
-export { useCountUp } from './useCountUp'
-export { CountUp } from './CountUp'
+export { useCountUp } from './useCountUp';
+export { CountUp } from './CountUp';
 
 const applyConfig = (config) => {
-  return config
-}
+  return config;
+};
 
-export default applyConfig
+export default applyConfig;

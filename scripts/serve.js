@@ -7,5 +7,5 @@ require('esbuild').serve(
     entryPoints: ['example/index.jsx'],
     outdir: 'example/js',
     bundle: true,
-  }
-)
+  },
+);
