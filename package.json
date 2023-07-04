@@ -1,34 +1,42 @@
 {
   "name": "@eeacms/countup",
-  "version": "1.0.5",
-  "description": "Made with create-react-library",
-  "author": "eea",
+  "version": "2.0.0",
+  "description": "React component and hook to animate counting up or down to a number",
+  "main": "./lib/index.js",
+  "module": "./lib/index.module.js",
+  "source": "./src/index.js",
+  "types": "./lib/index.d.js",
+  "author": "EEA",
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.modern.js",
-  "source": "src/index.js",
-  "engines": {
-    "node": ">=10"
-  },
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "build": "microbundle-crl --no-compress --format modern,cjs",
-    "start": "microbundle-crl watch --no-compress --format modern,cjs",
-    "prepare": "run-s build",
-    "test": "run-s test:unit test:lint test:build",
-    "test:build": "run-s build",
-    "test:lint": "eslint .",
-    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build",
-    "lint": "make lint",
-    "lint:fix": "make lint-fix",
-    "prepublish": "npm run prepare"
+    "start": "node scripts/serve.js",
+    "build": " node scripts/build.js",
+    "test": "jest --collectCoverage --coverageDirectory=\"coverage\"",
+    "test-watch": "jest --watch",
+    "prepublish": "yarn build"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:eea/eea-countup.git"
+    "url": "git+https://github.com/eea/countup.git"
   },
+  "keywords": [
+    "react",
+    "reactjs",
+    "animate-numerical-value",
+    "animations",
+    "count-up",
+    "countup",
+    "react-count-up",
+    "react-countup",
+    "countdown",
+    "count-down",
+    "counting",
+    "hooks",
+    "eeacms"
+  ],
   "prettier": {
     "trailingComma": "all",
     "singleQuote": true,
@@ -84,37 +92,28 @@
     },
     "ignoreFiles": "theme/themes/default/**/*.overrides"
   },
+  "bugs": {
+    "url": "https://github.com/eea/countup/issues"
+  },
+  "homepage": "https://github.com/eea/countup#readme",
+  "dependencies": {
+    "use-elapsed-time": "3.0.2"
+  },
   "peerDependencies": {
-    "react": "^16.0.0"
+    "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@cypress/code-coverage": "^3.10.0",
-    "@plone/scripts": "*",
-    "@testing-library/react": "^12.1.2",
-    "babel-eslint": "^10.0.3",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "cross-env": "^7.0.2",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-config-standard-react": "^9.2.0",
-    "eslint-import-resolver-alias": "*",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.17.0",
-    "eslint-plugin-standard": "^4.0.1",
-    "md5": "^2.3.0",
-    "microbundle-crl": "^0.13.10",
-    "npm-run-all": "^4.1.5",
-    "postcss-less": "6.0.0",
-    "prettier": "^2.0.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1"
-  },
-  "files": [
-    "dist"
-  ]
+    "@testing-library/jest-dom": "5.14.1",
+    "@testing-library/react": "12.0.0",
+    "@types/jest": "27.0.1",
+    "@types/node": "16.7.5",
+    "@types/react": "17.0.19",
+    "@types/react-dom": "17.0.9",
+    "codecov": "3.8.3",
+    "esbuild": "0.12.24",
+    "jest": "27.1.0",
+    "prettier": "2.3.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  }
 }
