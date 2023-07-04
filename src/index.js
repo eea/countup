@@ -1,6 +1,6 @@
-import Countup from './components/Countup';
+import useCountup from './components/useCountup';
 
-export { Countup };
+export { useCountup };
 
 const applyConfig = (config) => {
   return config;
