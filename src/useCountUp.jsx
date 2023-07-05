@@ -35,8 +35,14 @@ export const useCountUp = ({
 }) => {
   function useIsInViewport(ref) {
     const [intersected, setIntersected] = React.useState(false);
+    const [rendered, setRendered] = React.useState(false);
+    useEffect(() => {
+      setRendered(true);
+    }, []);
+
     React.useEffect(() => {
       if (intersected) return;
+      if (!rendered) return;
       const observer = new IntersectionObserver(([entry]) => {
         setIntersected(intersected === false ? entry.isIntersecting : true);
       });
@@ -50,7 +56,7 @@ export const useCountUp = ({
         }
         observer.disconnect();
       };
-    }, [ref, intersected]);
+    }, [ref, intersected, rendered]);
     return intersected;
   }
 
