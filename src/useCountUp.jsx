@@ -103,7 +103,7 @@ export const useCountUp = ({
 
   const { elapsedTime, reset } = useElapsedTime({
     isPlaying:
-      started === false && useIntersection == true ? false : isCounting,
+      started === false && useIntersection === true ? false : isCounting,
     duration: durationValue,
     onComplete,
     updateInterval,
