@@ -9,11 +9,15 @@ const Count = () => {
     <div style={{ marginTop: '120vh' }}>
       <span>
         <CountUp
-          start={0}
           end={12}
-          duration={100}
-          decimalPlaces={0}
-          isCounting={isPlaying}
+          isCounting
+          duration={30}
+          decimalPlaces={2}
+          formatter={(value) => {
+            let prefix = 'd';
+            let suffix = 'd';
+            return prefix + value.toFixed(2) + suffix;
+          }}
           // updateInterval={1}
           // onUpdate={(value) => console.log(value)}
         >
