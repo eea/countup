@@ -15,7 +15,7 @@ describe('CountUp', () => {
     // IntersectionObserver isn't available in test environment
     const mockIntersectionObserver = jest.fn();
     mockIntersectionObserver.mockReturnValue({
-      observe: () => null,
+      observe: () => true,
       unobserve: () => null,
       disconnect: () => null,
     });
@@ -28,7 +28,7 @@ describe('CountUp', () => {
   };
 
   const renderComponent = (props) =>
-    render(<CountUp {...fixture} {...props} />);
+    render(<CountUp {...fixture} {...props} useIntersection={false} />);
 
   afterEach(() => {
     children.mockClear();
