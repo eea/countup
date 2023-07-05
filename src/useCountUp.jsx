@@ -19,9 +19,6 @@ const getDuration = (end, duration) => {
 const addThousandsSeparator = (value, separator) =>
   value.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 
-const getDecimalPartLength = (num) =>
-  (num.toString().split('.')[1] || '').length;
-
 export const useCountUp = ({
   isCounting = false,
   start = 0,
@@ -43,12 +40,13 @@ export const useCountUp = ({
       const observer = new IntersectionObserver(([entry]) => {
         setIntersected(intersected === false ? entry.isIntersecting : true);
       });
-      if (ref?.current) {
-        observer.observe(ref.current);
+      let reference = ref.current;
+      if (reference) {
+        observer.observe(reference);
       }
       return () => {
-        if (ref?.current) {
-          observer.unobserve(ref.current);
+        if (reference) {
+          observer.unobserve(reference);
         }
         observer.disconnect();
       };
