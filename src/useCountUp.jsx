@@ -44,25 +44,27 @@ export const useCountUp = ({
   onUpdate,
 }) => {
   function useIsInViewport(ref) {
-    const [isIntersecting, setIsIntersecting] = React.useState(false);
-
-    const observer = React.useMemo(
-      () =>
-        new IntersectionObserver(([entry]) =>
-          setIsIntersecting(entry.isIntersecting),
-        ),
-      [],
-    );
+    const [intersected, setIntersected] = React.useState(false);
+    const [rendered, setRendered] = React.useState(false);
+    useEffect(() => {
+      setRendered(true);
+    }, []);
 
     React.useEffect(() => {
-      if (ref.current) observer.observe(ref.current);
-
+      if (intersected) return;
+      if (!rendered) return;
+      const observer = new IntersectionObserver(([entry]) => {
+        setIntersected(intersected === false ? entry.isIntersecting : true);
+      });
+      let reference = ref.current;
+      if (reference) {
+        observer.observe(reference);
+      }
       return () => {
         observer.disconnect();
       };
-    }, [ref, observer]);
-
-    return isIntersecting;
+    }, [ref, intersected, rendered]);
+    return intersected;
   }
 
   const durationValue = getDuration(end, duration);
