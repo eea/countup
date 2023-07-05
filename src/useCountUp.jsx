@@ -1,5 +1,12 @@
 import { useElapsedTime } from 'use-elapsed-time';
-import { defaultEasing, getEasing } from './easing';
+
+import React, { useEffect } from 'react';
+
+const updateValue = (t, b, c, d) => {
+  t /= d;
+  t--;
+  return c * (t * t * t + 1) + b;
+};
 
 const getDuration = (end, duration) => {
   if (typeof end !== 'number') {
@@ -31,22 +38,49 @@ export const useCountUp = ({
   decimalSeparator = '.',
   thousandsSeparator = '',
   onComplete,
-  easing = defaultEasing,
   formatter,
   updateInterval,
   onUpdate,
 }) => {
+  function useIsInViewport(ref) {
+    const [isIntersecting, setIsIntersecting] = React.useState(false);
+
+    const observer = React.useMemo(
+      () =>
+        new IntersectionObserver(([entry]) =>
+          setIsIntersecting(entry.isIntersecting),
+        ),
+      [],
+    );
+
+    React.useEffect(() => {
+      if (ref.current) observer.observe(ref.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }, [ref, observer]);
+
+    return isIntersecting;
+  }
+
   const durationValue = getDuration(end, duration);
+  const ref = React.useRef(null);
+  const isVisible = useIsInViewport(ref);
+  const [started, setStarted] = React.useState(false);
+
+  useEffect(() => {
+    if (isVisible === true) setStarted(true);
+  }, [isVisible]);
+
   const getValue = (elapsedTime) => {
     let rawValue;
-
     if (durationValue === 0 && typeof end === 'number') {
       rawValue = end;
     } else if (typeof end === 'number' && typeof durationValue === 'number') {
-      const easingFn = getEasing(easing);
       // elapsedTime should always be less or equal to the durationValue
       const time = elapsedTime < durationValue ? elapsedTime : durationValue;
-      rawValue = easingFn(time, start, end - start, durationValue);
+      rawValue = updateValue(time, start, end - start, durationValue);
     } else {
       rawValue = start + elapsedTime;
     }
@@ -67,7 +101,7 @@ export const useCountUp = ({
   };
 
   const { elapsedTime, reset } = useElapsedTime({
-    isPlaying: isCounting,
+    isPlaying: started === false ? false : isCounting,
     duration: durationValue,
     onComplete,
     updateInterval,
@@ -77,5 +111,5 @@ export const useCountUp = ({
         : undefined,
   });
 
-  return { value: getValue(elapsedTime), reset };
+  return { value: getValue(elapsedTime), reset, ref };
 };

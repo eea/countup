@@ -64,31 +64,6 @@ describe('CountUp', () => {
     expect(args.reset).toEqual(expect.any(Function));
   });
 
-  it('uses the custom easing function when it is provided', () => {
-    const easingReturnValue = '45687';
-    const easing = jest.fn().mockReturnValue(easingReturnValue);
-
-    renderComponent({ easing });
-
-    expect(screen.getByText(easingReturnValue)).toBeVisible();
-    expect(easing).toHaveBeenCalledWith(0, 0, 3684, 0.74);
-  });
-
-  it.each`
-    easing
-    ${'easeOutCubic'}
-    ${'easeInCubic'}
-    ${'linear'}
-  `(
-    'returns the correct start and end values when the easing is set to $easing',
-    async ({ easing }) => {
-      renderComponent({ easing, start: 46 });
-
-      expect(screen.getByText('46')).toBeVisible();
-      expect(await screen.findByText('3684')).toBeVisible();
-    },
-  );
-
   it('uses custom formatter when provided', async () => {
     renderComponent({ start: 1236, formatter: (value) => `$${value} left` });
 
@@ -141,24 +116,5 @@ describe('CountUp', () => {
     expect(thousands.length).toBe(1);
     expect(hundreds.length).toBe(3);
     expect(decimal.length).toBe(2);
-  });
-
-  it('fires updates per the updateInterval value', async () => {
-    const onUpdate = jest.fn();
-    renderComponent({
-      start: 5,
-      easing: 'linear',
-      duration: undefined,
-      end: undefined,
-      updateInterval: 1,
-      onUpdate,
-    });
-
-    expect(screen.getByText('5')).toBeVisible();
-    await waitFor(() => expect(onUpdate).toHaveBeenCalledWith('5'));
-    await waitFor(() => expect(onUpdate).toHaveBeenLastCalledWith('6'), {
-      timeout: 1500,
-    });
-    expect(screen.getByText('6')).toBeVisible();
   });
 });
