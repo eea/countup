@@ -11,8 +11,8 @@ const Count = () => {
         <CountUp
           start={0}
           end={12}
-          duration={10}
-          decimalPlaces={2}
+          duration={100}
+          decimalPlaces={0}
           isCounting={isPlaying}
           // updateInterval={1}
           // onUpdate={(value) => console.log(value)}

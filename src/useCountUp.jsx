@@ -19,22 +19,12 @@ const getDuration = (end, duration) => {
 const addThousandsSeparator = (value, separator) =>
   value.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 
-const getDecimalPartLength = (num) =>
-  (num.toString().split('.')[1] || '').length;
-
-const getDefaultDecimalPlaces = (start, end) => {
-  const startDecimals = getDecimalPartLength(start);
-  const endDecimals = getDecimalPartLength(end || 1);
-
-  return startDecimals >= endDecimals ? startDecimals : endDecimals;
-};
-
 export const useCountUp = ({
   isCounting = false,
   start = 0,
   end,
   duration,
-  decimalPlaces = getDefaultDecimalPlaces(start, end),
+  decimalPlaces = 0,
   decimalSeparator = '.',
   thousandsSeparator = '',
   onComplete,
@@ -44,25 +34,24 @@ export const useCountUp = ({
   onUpdate,
 }) => {
   function useIsInViewport(ref) {
-    const [isIntersecting, setIsIntersecting] = React.useState(false);
-
-    const observer = React.useMemo(
-      () =>
-        new IntersectionObserver(([entry]) =>
-          setIsIntersecting(entry.isIntersecting),
-        ),
-      [],
-    );
-
+    const [intersected, setIntersected] = React.useState(false);
     React.useEffect(() => {
-      if (ref.current) observer.observe(ref.current);
-
+      if (intersected) return;
+      const observer = new IntersectionObserver(([entry]) => {
+        setIntersected(intersected === false ? entry.isIntersecting : true);
+      });
+      let reference = ref.current;
+      if (reference) {
+        observer.observe(reference);
+      }
       return () => {
+        if (reference) {
+          observer.unobserve(reference);
+        }
         observer.disconnect();
       };
-    }, [ref, observer]);
-
-    return isIntersecting;
+    }, [ref, intersected]);
+    return intersected;
   }
 
   const durationValue = getDuration(end, duration);
