@@ -6,16 +6,16 @@ const Count = () => {
   const [isPlaying, setIsPlaying] = useState(true);
 
   return (
-    <div>
+    <div style={{ marginTop: '120vh' }}>
       <span>
         <CountUp
-          start={32237}
-          easing="linear"
-          duration={undefined}
+          start={0}
+          end={12}
+          duration={10}
+          decimalPlaces={2}
           isCounting={isPlaying}
           // updateInterval={1}
           // onUpdate={(value) => console.log(value)}
-          formatter={(value) => value.toLocaleString()}
         >
           {({ value }) => value}
         </CountUp>
