@@ -92,7 +92,7 @@ describe('CountUp', () => {
 
     const value = await getSomeAnimatedValue();
     const [, decimal] = value.split('.');
-    expect(decimal.length).toBe(2);
+    expect(decimal?.length).toBe(2);
   });
 
   it('adds as many decimal places as the bigger decimal places count from start and end when decimalPlaces is not set and end has more decimal places', async () => {
