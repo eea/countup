@@ -1,5 +1,19 @@
 # EEA countup
 
+[![Releases](https://img.shields.io/github/v/release/eea/countup)](https://github.com/eea/countup/releases)
+
+[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fcountup%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/countup/job/master/display/redirect)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-master&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=countup-master)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-master&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=countup-master)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-master&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=countup-master)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-master&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=countup-master)
+
+[![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fcountup%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/countup/job/develop/display/redirect)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=countup-develop)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=countup-develop)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=countup-develop)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=countup-develop)
+
 This is a countup react library with the visibility observer already in it
 Also it has support for Volto addons pipeline, it is basically as an empty addon with tests
 
@@ -37,3 +51,22 @@ import { useCountUp } from 'use-count-up';
 
 const { value, reset } = useCountUp({ isCounting: true });
 ```
+
+## Release
+
+See [RELEASE.md](https://github.com/eea/countup/blob/master/RELEASE.md).
+
+## How to contribute
+
+See [DEVELOP.md](https://github.com/eea/countup/blob/master/DEVELOP.md).
+
+## Copyright and license
+
+The Initial Owner of the Original Code is European Environment Agency (EEA).
+All Rights Reserved.
+
+See [LICENSE.md](https://github.com/eea/countup/blob/master/LICENSE.md) for details.
+
+## Funding
+
+[European Environment Agency (EU)](http://eea.europa.eu)

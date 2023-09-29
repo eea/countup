@@ -6,16 +6,34 @@
   "module": "./lib/index.module.js",
   "source": "./src/index.js",
   "types": "./lib/index.d.js",
-  "author": "EEA",
+  "author": "European Environment Agency: IDM2 A-Team",
   "license": "MIT",
   "files": [
     "lib"
   ],
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json}": [
+      "make lint-fix",
+      "make prettier-fix"
+    ],
+    "src/**/*.{jsx}": [
+      "make i18n"
+    ],
+    "theme/**/*.{css,less}": [
+      "make stylelint-fix"
+    ],
+    "src/**/*.{css,less}": [
+      "make stylelint-fix"
+    ],
+    "theme/**/*.overrides": [
+      "make stylelint-fix"
+    ],
+    "src/**/*.overrides": [
+      "make stylelint-fix"
+    ]
+  },
   "scripts": {
-    "start": "node scripts/serve.js",
-    "build": " node scripts/build.js",
-    "test-watch": "jest --watch",
-    "prepublish": "yarn build",
+    "prepare": "husky install",
     "release": "release-it",
     "release-major-beta": "release-it major --preRelease=beta",
     "release-beta": "release-it --preRelease=beta",
