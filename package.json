@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/countup",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "React component and hook to animate counting up or down to a number",
   "main": "./lib/index.js",
   "module": "./lib/index.module.js",
