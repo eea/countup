@@ -115,12 +115,12 @@ pipeline {
             }
           }
 
-          // stage('Style lint') {
-          //   when { environment name: 'SKIP_TESTS', value: '' }
-          //   steps {
-          //     sh '''docker run --rm --name="$IMAGE_NAME-stylelint" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend stylelint'''
-          //   }
-          // }
+          stage('Style lint') {
+            when { environment name: 'SKIP_TESTS', value: '' }
+            steps {
+              sh '''docker run --rm --name="$IMAGE_NAME-stylelint" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend stylelint'''
+            }
+          }
 
           stage('Prettier') {
             when { environment name: 'SKIP_TESTS', value: '' }
