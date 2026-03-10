@@ -9,9 +9,10 @@ pipeline {
   environment {
     GIT_NAME = "countup"
     NAMESPACE = "@eeacms"
-    SONARQUBE_TAGS = "volto.eea.europa.eu"
+    SONARQUBE_TAGS = "volto.eea.europa.eu,forest.eea.europa.eu,climate-energy.eea.europa.eu,biodiversity.europa.eu,industry.eea.europa.eu,water.europa.eu-freshwater,demo-www.eea.europa.eu,clmsdemo.devel6cph.eea.europa.eu,water.europa.eu-marine,climate-adapt.eea.europa.eu,climate-advisory-board.devel4cph.eea.europa.eu,climate-advisory-board.europa.eu,www.eea.europa.eu-en,www.eea.europa.eu,insitu.copernicus.eu,ask.copernicus.eu,land.copernicus.eu"
     DEPENDENCIES = ""
     VOLTO = "17"
+    VOLTO18_BREAKING_CHANGES = "no"
     IMAGE_NAME = BUILD_TAG.toLowerCase()
   }
 
@@ -136,8 +137,8 @@ pipeline {
                     sh '''docker run --name="$IMAGE_NAME-volto" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend test-ci'''
                     sh '''rm -rf xunit-reports'''
                     sh '''mkdir -p xunit-reports'''
-                    sh '''docker cp $IMAGE_NAME-volto:/app/coverage xunit-reports/'''
-                    sh '''docker cp $IMAGE_NAME-volto:/app/junit.xml xunit-reports/'''
+                    sh '''docker cp $IMAGE_NAME-volto:/app/src/addons/$GIT_NAME/coverage xunit-reports/'''
+                    sh '''docker cp $IMAGE_NAME-volto:/app/src/addons/$GIT_NAME/junit.xml xunit-reports/'''
                     publishHTML(target : [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
@@ -156,13 +157,117 @@ pipeline {
                 }
               }
           }
+
+          stage('Report to SonarQube') {
+            when {
+              anyOf {
+                allOf {
+                  not { environment name: 'CHANGE_ID', value: '' }
+                  environment name: 'CHANGE_TARGET', value: 'develop'
+                  environment name: 'SKIP_TESTS', value: ''
+                }
+                allOf {
+                  environment name: 'CHANGE_ID', value: ''
+                  environment name: 'SKIP_TESTS', value: ''
+                  anyOf {
+                    allOf {
+                      branch 'develop'
+                      not { changelog '.*^Automated release [0-9\\.]+$' }
+                    }
+                    branch 'master'
+                  }
+                }
+              }
+            }
+            steps {
+              script {
+                def scannerHome = tool 'SonarQubeScanner'
+                def nodeJS = tool 'NodeJS'
+                if (env.CHANGE_ID) {
+                  env.sonarParams = " -Dsonar.pullrequest.base=${env.CHANGE_TARGET} -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} -Dsonar.pullrequest.key=${env.CHANGE_ID} "
+                }
+                else {
+                  env.sonarParams = " -Dsonar.branch.name=${env.BRANCH_NAME}"
+                }
+                withSonarQubeEnv('Sonarqube') {
+                  sh '''sed -i "s#/app/src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
+                  sh '''sed -i "s#src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
+                  sh "export PATH=${scannerHome}/bin:${nodeJS}/bin:$PATH; sonar-scanner -Dsonar.javascript.lcov.reportPaths=./xunit-reports/coverage/lcov.info -Dsonar.sources=./src -Dsonar.projectKey=$GIT_NAME -Dsonar.projectName=$GIT_NAME -Dsonar.projectVersion=\$(jq -r '.version' package.json) ${env.sonarParams}"
+                  sh '''try=5; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}&tags=${SONARQUBE_TAGS}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 15; try=\$(( \$try - 1 )); fi; done'''
+                }
+              }
+            }
+          }
+        }
+      }
+
+      stage('Volto 18') {
+        agent { node { label 'integration'} }
+        when {
+          environment name: 'SKIP_TESTS', value: ''
+          not { environment name: 'VOLTO18_BREAKING_CHANGES', value: 'yes' }
+        }
+        stages {
+          stage('Build test image') {
+            steps {
+              sh '''docker build --pull --build-arg="VOLTO_VERSION=18-yarn" --build-arg="ADDON_NAME=$NAMESPACE/$GIT_NAME"  --build-arg="ADDON_PATH=$GIT_NAME" . -t $IMAGE_NAME-frontend18'''
+            }
+          }
+
+          stage('Unit tests Volto 18') {
+            steps {
+              script {
+                try {
+                  sh '''docker run --name="$IMAGE_NAME-volto18" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend18 test-ci'''
+                  sh '''rm -rf xunit-reports18'''
+                  sh '''mkdir -p xunit-reports18'''
+                  sh '''docker cp $IMAGE_NAME-volto18:/app/src/addons/$GIT_NAME/junit.xml xunit-reports18/'''
+                } finally {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    junit testResults: 'xunit-reports18/junit.xml', allowEmptyResults: true
+                  }
+                  sh script: '''docker rm -v $IMAGE_NAME-volto18''', returnStatus: true
+                }
+              }
+            }
+          }
         }
       }
       }
       post {
         always {
             sh script: "docker rmi $IMAGE_NAME-frontend", returnStatus: true
-            sh script: "docker rmi $IMAGE_NAME-frontend16", returnStatus: true
+            sh script: "docker rmi $IMAGE_NAME-frontend18", returnStatus: true
+        }
+      }
+    }
+
+    stage('SonarQube compare to master') {
+      when {
+        anyOf {
+          allOf {
+            not { environment name: 'CHANGE_ID', value: '' }
+            environment name: 'CHANGE_TARGET', value: 'develop'
+            environment name: 'SKIP_TESTS', value: ''
+          }
+          allOf {
+            environment name: 'SKIP_TESTS', value: ''
+            environment name: 'CHANGE_ID', value: ''
+            branch 'develop'
+            not { changelog '.*^Automated release [0-9\\.]+$' }
+          }
+        }
+      }
+      steps {
+        script {
+          sh '''echo "Error" > checkresult.txt'''
+          catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            sh '''set -o pipefail; docker run -i --rm --pull always --name="$IMAGE_NAME-gitflow-sn" -e GIT_BRANCH="$BRANCH_NAME" -e GIT_NAME="$GIT_NAME" eeacms/gitflow /checkSonarqubemasterV2.sh | grep -v "Found script" | tee checkresult.txt'''
+          }
+
+          publishChecks name: 'SonarQube', title: 'Sonarqube Code Quality Check', summary: 'Quality check on the SonarQube metrics from branch develop, comparing it with the ones from master branch. No bugs are allowed',
+                        text: readFile(file: 'checkresult.txt'), conclusion: "${currentBuild.currentResult}",
+                        detailsURL: "${env.BUILD_URL}display/redirect"
         }
       }
     }

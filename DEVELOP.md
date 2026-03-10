@@ -1,106 +1,80 @@
 # countup
 
-## Develop
+## Develop locally
 
-1. Make sure you have `docker` and `docker compose` installed and running on your machine:
+`@eeacms/countup` is a React library. Its local development workflow uses the
+bundled example app instead of a Volto or Plone docker stack.
 
-    ```Bash
-    git clone https://github.com/eea/countup.git
-    cd countup
-    git checkout -b bugfix-123456 develop
-    make
-    make start
-    ```
+1. Clone the repository and install dependencies:
 
-1. Wait for `Volto started at 0.0.0.0:3000` meesage
+   ```bash
+   git clone https://github.com/eea/countup.git
+   cd countup
+   make install
+   ```
 
-1. Go to http://localhost:3000
+1. Start the example app:
 
-1. Initialize git hooks
+   ```bash
+   make start
+   ```
 
-    ```Bash
-    yarn prepare
-    ```
+1. Open http://localhost:8888
 
-1. Happy hacking!
+1. Initialize git hooks if needed:
 
-### Or add @eeacms/countup to your Volto project
+   ```bash
+   yarn prepare
+   ```
 
-Before starting make sure your development environment is properly set. See [Volto Developer Documentation](https://docs.voltocms.com/getting-started/install/)
+If port `8888` is already in use, start the example app on a different port:
 
-1.  Make sure you have installed `yo`, `@plone/generator-volto` and `mrs-developer`
+```bash
+SERVE_PORT=8899 make start
+```
 
-        npm install -g yo @plone/generator-volto mrs-developer
+## Use in Volto 17 or Volto 18 during development
 
-1.  Create new volto app
+`@eeacms/countup` is not a Volto addon. Add it as a dependency, not in the
+Volto `addons` list.
 
-        yo @plone/volto my-volto-project --addon @eeacms/countup --skip-install
-        cd my-volto-project
+1. Add a development checkout in `mrs.developer.json`:
 
-1.  Add the following to `mrs.developer.json`:
+   ```json
+   {
+     "countup": {
+       "develop": true,
+       "url": "https://github.com/eea/countup.git",
+       "package": "@eeacms/countup",
+       "branch": "develop",
+       "path": "src"
+     }
+   }
+   ```
 
-        {
-            "countup": {
-                "url": "https://github.com/eea/countup.git",
-                "package": "@eeacms/countup",
-                "branch": "develop",
-                "path": "src"
-            }
-        }
+1. Add `@eeacms/countup` to your project dependencies.
 
-1.  Install
+1. Refresh the project setup:
 
-        make develop
-        yarn
+   ```bash
+   make install
+   ```
 
-1.  Start backend
+1. Start the project frontend as usual.
 
-        docker run --pull always -it --rm --name plone -p 8080:8080 -e SITE=Plone plone/plone-backend
+For Cookieplone-based Volto 18 projects:
 
-    ...wait for backend to setup and start - `Ready to handle requests`:
+```bash
+make frontend-start
+```
 
-    ...you can also check http://localhost:8080/Plone
+For legacy Volto 17 projects, keep using the existing yarn-based frontend
+workflow for that project.
 
-1.  Start frontend
+## Tests
 
-        yarn start
+Run the library test suite directly:
 
-1.  Go to http://localhost:3000
-
-1.  Happy hacking!
-
-        cd src/addons/countup/
-
-## Cypress
-
-To run cypress locally, first make sure you don't have any Volto/Plone running on ports `8080` and `3000`.
-
-You don't have to be in a `clean-volto-project`, you can be in any Volto Frontend
-project where you added `countup` to `mrs.developer.json`
-
-Go to:
-
-  ```BASH
-  cd src/addons/countup/
-  ```
-
-Start:
-
-  ```Bash
-  make
-  make start
-  ```
-
-This will build and start with Docker a clean `Plone backend` and `Volto Frontend` with `countup` block installed.
-
-Open Cypress Interface:
-
-  ```Bash
-  make cypress-open
-  ```
-
-Or run it:
-
-  ```Bash
-  make cypress-run
-  ```
+```bash
+make test
+```

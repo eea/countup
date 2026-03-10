@@ -1,7 +1,9 @@
+const port = Number(process.env.PORT || 8888);
+
 require('esbuild').serve(
   {
     servedir: 'example',
-    port: 8888,
+    port,
   },
   {
     entryPoints: ['example/index.jsx'],
