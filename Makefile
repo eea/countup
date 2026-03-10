@@ -1,15 +1,11 @@
 ##############################################################################
 # Run:
-#    make
+#    make install
 #    make start
 #
 # Go to:
 #
-#     http://localhost:3000
-#
-# Cypress:
-#
-#    make cypress-open
+#     http://localhost:8888
 #
 ##############################################################################
 # SETUP MAKE
@@ -42,62 +38,47 @@ else
 endif
 
 ##############################################################################
-# SETTINGS AND VARIABLE
+# SETTINGS AND VARIABLES
 DIR=$(shell basename $$(pwd))
-NODE_MODULES?="../../../node_modules"
-PLONE_VERSION?=6
-VOLTO_VERSION?=17
-ADDON_PATH="${DIR}"
-ADDON_NAME="@eeacms/${ADDON_PATH}"
-DOCKER_COMPOSE=PLONE_VERSION=${PLONE_VERSION} VOLTO_VERSION=${VOLTO_VERSION} ADDON_NAME=${ADDON_NAME} ADDON_PATH=${ADDON_PATH} docker compose
-RAZZLE_INTERNAL_API_PATH?="http://localhost:8080/Plone"
-RAZZLE_DEV_PROXY_API_PATH?="${RAZZLE_INTERNAL_API_PATH}"
-CYPRESS_API_PATH="${RAZZLE_DEV_PROXY_API_PATH}"
-
-
+NODE_MODULES?=$(shell if [ -d ../../../node_modules/.bin ]; then echo ../../../node_modules; elif [ -d node_modules/.bin ]; then echo node_modules; else echo node_modules; fi)
+JEST=$(NODE_MODULES)/.bin/jest
+JEST_CONFIG=jest-addon.config.js
+SERVE_PORT?=8888
 
 # Top-level targets
 .PHONY: all
-all: clean install
+all: install
 
 .PHONY: clean
-clean:			## Cleanup development environment
-	${DOCKER_COMPOSE} down --volumes --remove-orphans
+clean:                  ## Cleanup generated files
+	rm -rf build/messages coverage example/js junit.xml lib
 
 .PHONY: install
-install:		## Build and install development environment
-	echo "Running:	${DOCKER_COMPOSE} build"
-	${DOCKER_COMPOSE} pull
-	${DOCKER_COMPOSE} build
+install:                ## Install dependencies
+	yarn install
 
 .PHONY: start
-start:			## Start development environment
-	echo "Running:	${DOCKER_COMPOSE} up"
-	${DOCKER_COMPOSE} up
+start:                  ## Start the local example app on http://localhost:8888
+	PORT=$(SERVE_PORT) node scripts/serve.js
 
-.PHONY: shell
-shell:			## Start a shell in the frontend container
-	echo "Running:	${DOCKER_COMPOSE} run frontend bash"
-	${DOCKER_COMPOSE} run --entrypoint=bash frontend
-
-.PHONY: cypress-open
-cypress-open:		## Open cypress integration tests
-	CYPRESS_API_PATH="${RAZZLE_DEV_PROXY_API_PATH}" NODE_ENV=development  $(NODE_MODULES)/cypress/bin/cypress open
-
-.PHONY: cypress-run
-cypress-run:	## Run cypress integration tests
-	CYPRESS_API_PATH="${RAZZLE_DEV_PROXY_API_PATH}" NODE_ENV=development  $(NODE_MODULES)/cypress/bin/cypress run
+.PHONY: build
+build:                  ## Build the library bundles in ./lib
+	node scripts/build.js
 
 .PHONY: test
-test:			## Run jest tests
-	${DOCKER_COMPOSE} run -e CI=1 frontend test
+test:                   ## Run Jest tests once
+	CI=1 $(JEST) --config $(JEST_CONFIG) --watchAll=false
+
+.PHONY: test-watch
+test-watch:             ## Run Jest in watch mode
+	$(JEST) --config $(JEST_CONFIG) --watch
 
 .PHONY: test-update
-test-update:	## Update jest tests snapshots
-	${DOCKER_COMPOSE} run -e CI=1 frontend test -u
+test-update:            ## Update Jest snapshots
+	CI=1 $(JEST) --config $(JEST_CONFIG) --watchAll=false -u
 
 .PHONY: stylelint
-stylelint:		## Stylelint
+stylelint:              ## Stylelint
 	$(NODE_MODULES)/.bin/stylelint --allow-empty-input 'src/**/*.{css,less}'
 
 .PHONY: stylelint-overrides
@@ -105,35 +86,35 @@ stylelint-overrides:
 	$(NODE_MODULES)/.bin/stylelint --custom-syntax less --allow-empty-input 'theme/**/*.overrides' 'src/**/*.overrides'
 
 .PHONY: stylelint-fix
-stylelint-fix:	## Fix stylelint
+stylelint-fix:          ## Fix stylelint
 	$(NODE_MODULES)/.bin/stylelint --allow-empty-input 'src/**/*.{css,less}' --fix
 	$(NODE_MODULES)/.bin/stylelint --custom-syntax less --allow-empty-input 'theme/**/*.overrides' 'src/**/*.overrides' --fix
 
 .PHONY: prettier
-prettier:		## Prettier
+prettier:               ## Prettier
 	$(NODE_MODULES)/.bin/prettier --single-quote --check 'src/**/*.{js,jsx,json,css,less,md}'
 
 .PHONY: prettier-fix
-prettier-fix:	## Fix prettier
-	$(NODE_MODULES)/.bin/prettier --single-quote  --write 'src/**/*.{js,jsx,json,css,less,md}'
+prettier-fix:           ## Fix prettier
+	$(NODE_MODULES)/.bin/prettier --single-quote --write 'src/**/*.{js,jsx,json,css,less,md}'
 
 .PHONY: lint
-lint:			## ES Lint
+lint:                   ## ES Lint
 	$(NODE_MODULES)/.bin/eslint --max-warnings=0 'src/**/*.{js,jsx}'
 
 .PHONY: lint-fix
-lint-fix:		## Fix ES Lint
+lint-fix:               ## Fix ES Lint
 	$(NODE_MODULES)/.bin/eslint --fix 'src/**/*.{js,jsx}'
 
 .PHONY: i18n
-i18n:			## i18n
+i18n:                   ## i18n
 	rm -rf build/messages
 	NODE_ENV=development $(NODE_MODULES)/.bin/i18n --addon
 
 .PHONY: help
 help:                   ## Show this help.
 	@echo -e "$$(grep -hE '^\S+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\x1b[36m\1\\x1b[m:\2/' | column -c2 -t -s :)"
-	head -n 14 Makefile
+	head -n 8 Makefile
 
 .PHONY: ci-fix
 ci-fix:
@@ -146,20 +127,4 @@ ci-fix:
 
 .PHONY: test-ci
 test-ci:
-	cd /app
-	RAZZLE_JEST_CONFIG=src/addons/${ADDON_PATH}/jest-addon.config.js CI=true yarn test src/addons/${ADDON_PATH}/src --watchAll=false --reporters=default --reporters=jest-junit --collectCoverage --coverageReporters lcov cobertura text
-
-.PHONY: start-ci
-start-ci:
-	cp .coverage.babel.config.js /app/babel.config.js
-	cd ../..
-	yarn start
-
-.PHONY: check-ci
-check-ci:
-	$(NODE_MODULES)/.bin/wait-on -t 240000  http://localhost:3000
-
-.PHONY: cypress-ci
-cypress-ci:
-	$(NODE_MODULES)/.bin/wait-on -t 240000  http://localhost:3000
-	CYPRESS_API_PATH="${RAZZLE_DEV_PROXY_API_PATH}" NODE_ENV=development  $(NODE_MODULES)/cypress/bin/cypress run --browser chromium
+	CI=true JEST_JUNIT_OUTPUT_DIR=. JEST_JUNIT_OUTPUT_NAME=junit.xml $(JEST) --config $(JEST_CONFIG) --watchAll=false --runInBand --reporters=default --reporters=jest-junit --collectCoverage --coverageReporters lcov cobertura text

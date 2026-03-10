@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "node scripts/serve.js",
-    "build": " node scripts/build.js",
+    "build": "node scripts/build.js",
     "prepublish": "yarn build",
     "prepare": "husky install",
     "release": "release-it",
@@ -42,7 +42,7 @@
     "release-beta": "release-it --preRelease=beta",
     "bootstrap": "npm install -g ejs; npm link ejs; node bootstrap",
     "test": "make test",
-    "test-watch": "jest --watch",
+    "test-watch": "make test-watch",
     "test:fix": "make test-update",
     "pre-commit": "yarn stylelint:fix && yarn prettier:fix && yarn lint:fix",
     "stylelint": "make stylelint",
@@ -53,8 +53,7 @@
     "lint": "make lint",
     "lint:fix": "make lint-fix",
     "i18n": "make i18n",
-    "cypress:run": "make cypress-run",
-    "cypress:open": "make cypress-open"
+    "dev": "make start"
   },
   "repository": {
     "type": "git",

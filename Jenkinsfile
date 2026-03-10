@@ -12,6 +12,7 @@ pipeline {
     SONARQUBE_TAGS = "volto.eea.europa.eu"
     DEPENDENCIES = ""
     VOLTO = "17"
+    VOLTO18_BREAKING_CHANGES = "no"
     IMAGE_NAME = BUILD_TAG.toLowerCase()
   }
 
@@ -158,11 +159,44 @@ pipeline {
           }
         }
       }
+
+      stage('Volto 18') {
+        agent { node { label 'integration'} }
+        when {
+          environment name: 'SKIP_TESTS', value: ''
+          not { environment name: 'VOLTO18_BREAKING_CHANGES', value: 'yes' }
+        }
+        stages {
+          stage('Build test image') {
+            steps {
+              sh '''docker build --pull --build-arg="VOLTO_VERSION=18-yarn" --build-arg="ADDON_NAME=$NAMESPACE/$GIT_NAME"  --build-arg="ADDON_PATH=$GIT_NAME" . -t $IMAGE_NAME-frontend18'''
+            }
+          }
+
+          stage('Unit tests Volto 18') {
+            steps {
+              script {
+                try {
+                  sh '''docker run --name="$IMAGE_NAME-volto18" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend18 test-ci'''
+                  sh '''rm -rf xunit-reports18'''
+                  sh '''mkdir -p xunit-reports18'''
+                  sh '''docker cp $IMAGE_NAME-volto18:/app/junit.xml xunit-reports18/'''
+                } finally {
+                  catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    junit testResults: 'xunit-reports18/junit.xml', allowEmptyResults: true
+                  }
+                  sh script: '''docker rm -v $IMAGE_NAME-volto18''', returnStatus: true
+                }
+              }
+            }
+          }
+        }
+      }
       }
       post {
         always {
             sh script: "docker rmi $IMAGE_NAME-frontend", returnStatus: true
-            sh script: "docker rmi $IMAGE_NAME-frontend16", returnStatus: true
+            sh script: "docker rmi $IMAGE_NAME-frontend18", returnStatus: true
         }
       }
     }
