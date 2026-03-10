@@ -14,14 +14,32 @@
 [![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=countup-develop)
 [![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=countup-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=countup-develop)
 
-This is a countup react library with the visibility observer already in it
-Also it has support for Volto addons pipeline, it is basically as an empty addon with tests
+This is a React countup library with visibility observer support.
+The repository keeps lightweight Volto-oriented CI wiring so it can be tested
+in the same frontend pipeline as the other EEA packages, but consumers should
+use it as a regular dependency rather than as a Volto addon.
 
 ## Installation
 
 ```
 yarn add @eeacms/countup
 ```
+
+## Development
+
+Local development uses the bundled example app, not a Volto/Plone docker stack.
+
+```bash
+make install
+make start
+```
+
+Go to http://localhost:8888
+
+If port `8888` is busy in your workspace, run `SERVE_PORT=8899 make start`.
+
+To consume `@eeacms/countup` from Volto 17 or Volto 18, add it as a regular
+dependency. Do not add it to the Volto `addons` list.
 
 ## Props
 
