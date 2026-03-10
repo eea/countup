@@ -137,8 +137,8 @@ pipeline {
                     sh '''docker run --name="$IMAGE_NAME-volto" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend test-ci'''
                     sh '''rm -rf xunit-reports'''
                     sh '''mkdir -p xunit-reports'''
-                    sh '''docker cp $IMAGE_NAME-volto:/app/coverage xunit-reports/'''
-                    sh '''docker cp $IMAGE_NAME-volto:/app/junit.xml xunit-reports/'''
+                    sh '''docker cp $IMAGE_NAME-volto:/app/src/addons/$GIT_NAME/coverage xunit-reports/'''
+                    sh '''docker cp $IMAGE_NAME-volto:/app/src/addons/$GIT_NAME/junit.xml xunit-reports/'''
                     publishHTML(target : [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
@@ -180,7 +180,7 @@ pipeline {
                   sh '''docker run --name="$IMAGE_NAME-volto18" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend18 test-ci'''
                   sh '''rm -rf xunit-reports18'''
                   sh '''mkdir -p xunit-reports18'''
-                  sh '''docker cp $IMAGE_NAME-volto18:/app/junit.xml xunit-reports18/'''
+                  sh '''docker cp $IMAGE_NAME-volto18:/app/src/addons/$GIT_NAME/junit.xml xunit-reports18/'''
                 } finally {
                   catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     junit testResults: 'xunit-reports18/junit.xml', allowEmptyResults: true
