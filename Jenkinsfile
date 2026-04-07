@@ -11,8 +11,8 @@ pipeline {
     NAMESPACE = "@eeacms"
     SONARQUBE_TAGS = "volto.eea.europa.eu,forest.eea.europa.eu,climate-energy.eea.europa.eu,biodiversity.europa.eu,industry.eea.europa.eu,water.europa.eu-freshwater,demo-www.eea.europa.eu,clmsdemo.devel6cph.eea.europa.eu,water.europa.eu-marine,climate-adapt.eea.europa.eu,climate-advisory-board.devel4cph.eea.europa.eu,climate-advisory-board.europa.eu,www.eea.europa.eu-en,www.eea.europa.eu,insitu.copernicus.eu,ask.copernicus.eu,land.copernicus.eu"
     DEPENDENCIES = ""
-    VOLTO = "17"
-    VOLTO18_BREAKING_CHANGES = "no"
+    CURRENT_VOLTO = "18-yarn"
+    PREVIOUS_VOLTO = "17"
     IMAGE_NAME = BUILD_TAG.toLowerCase()
   }
 
@@ -73,12 +73,13 @@ pipeline {
       }
       parallel {
 
-      stage('Volto 17') {
+      // Declarative stage names must stay string literals.
+      stage('Volto 18-yarn') {
         agent { node { label 'docker-1.13'} }
         stages {
       	  stage('Build test image') {
             steps {
-              sh '''docker build --pull --build-arg="VOLTO_VERSION=$VOLTO" --build-arg="ADDON_NAME=$NAMESPACE/$GIT_NAME"  --build-arg="ADDON_PATH=$GIT_NAME" . -t $IMAGE_NAME-frontend'''
+              sh '''docker build --pull --build-arg="VOLTO_VERSION=$CURRENT_VOLTO" --build-arg="ADDON_NAME=$NAMESPACE/$GIT_NAME"  --build-arg="ADDON_PATH=$GIT_NAME" . -t $IMAGE_NAME-frontend-current'''
             }
           }
 
@@ -89,9 +90,9 @@ pipeline {
             }
             steps {
               script {
-              fix_result = sh(script: '''docker run --name="$IMAGE_NAME-fix" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend ci-fix''', returnStatus: true)
-              sh '''docker cp $IMAGE_NAME-fix:/app/src/addons/$GIT_NAME/src .'''
-              sh '''docker rm -v $IMAGE_NAME-fix'''
+              fix_result = sh(script: '''docker run --name="$IMAGE_NAME-fix-current" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend-current ci-fix''', returnStatus: true)
+              sh '''docker cp $IMAGE_NAME-fix-current:/app/src/addons/$GIT_NAME/src .'''
+              sh '''docker rm -v $IMAGE_NAME-fix-current'''
               FOUND_FIX = sh(script: '''git diff | wc -l''', returnStdout: true).trim()
 
               if (FOUND_FIX != '0') {
@@ -112,21 +113,21 @@ pipeline {
           stage('ES lint') {
             when { environment name: 'SKIP_TESTS', value: '' }
             steps {
-              sh '''docker run --rm --name="$IMAGE_NAME-eslint" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend lint'''
+              sh '''docker run --rm --name="$IMAGE_NAME-eslint-current" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend-current lint'''
             }
           }
 
           stage('Style lint') {
             when { environment name: 'SKIP_TESTS', value: '' }
             steps {
-              sh '''docker run --rm --name="$IMAGE_NAME-stylelint" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend stylelint'''
+              sh '''docker run --rm --name="$IMAGE_NAME-stylelint-current" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend-current stylelint'''
             }
           }
 
           stage('Prettier') {
             when { environment name: 'SKIP_TESTS', value: '' }
             steps {
-              sh '''docker run --rm --name="$IMAGE_NAME-prettier" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend prettier'''
+              sh '''docker run --rm --name="$IMAGE_NAME-prettier-current" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME  $IMAGE_NAME-frontend-current prettier'''
             }
           }
           stage('Unit tests') {
@@ -134,25 +135,25 @@ pipeline {
               steps {
                 script {
                   try {
-                    sh '''docker run --name="$IMAGE_NAME-volto" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend test-ci'''
-                    sh '''rm -rf xunit-reports'''
-                    sh '''mkdir -p xunit-reports'''
-                    sh '''docker cp $IMAGE_NAME-volto:/app/src/addons/$GIT_NAME/coverage xunit-reports/'''
-                    sh '''docker cp $IMAGE_NAME-volto:/app/src/addons/$GIT_NAME/junit.xml xunit-reports/'''
+                    sh '''docker run --name="$IMAGE_NAME-volto-current" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend-current test-ci'''
+                    sh '''rm -rf xunit-reports-current'''
+                    sh '''mkdir -p xunit-reports-current'''
+                    sh '''docker cp $IMAGE_NAME-volto-current:/app/src/addons/$GIT_NAME/coverage xunit-reports-current/'''
+                    sh '''docker cp $IMAGE_NAME-volto-current:/app/src/addons/$GIT_NAME/junit.xml xunit-reports-current/'''
                     publishHTML(target : [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: true,
-                    reportDir: 'xunit-reports/coverage/lcov-report',
+                    reportDir: 'xunit-reports-current/coverage/lcov-report',
                     reportFiles: 'index.html',
                     reportName: 'UTCoverage',
                     reportTitles: 'Unit Tests Code Coverage'
                   ])
                 } finally {
                     catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                        junit testResults: 'xunit-reports/junit.xml', allowEmptyResults: true
+                        junit testResults: 'xunit-reports-current/junit.xml', allowEmptyResults: true
                     }
-                    sh script: '''docker rm -v $IMAGE_NAME-volto''', returnStatus: true
+                    sh script: '''docker rm -v $IMAGE_NAME-volto-current''', returnStatus: true
                   }
                 }
               }
@@ -190,9 +191,9 @@ pipeline {
                   env.sonarParams = " -Dsonar.branch.name=${env.BRANCH_NAME}"
                 }
                 withSonarQubeEnv('Sonarqube') {
-                  sh '''sed -i "s#/app/src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
-                  sh '''sed -i "s#src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
-                  sh "export PATH=${scannerHome}/bin:${nodeJS}/bin:$PATH; sonar-scanner -Dsonar.javascript.lcov.reportPaths=./xunit-reports/coverage/lcov.info -Dsonar.sources=./src -Dsonar.projectKey=$GIT_NAME -Dsonar.projectName=$GIT_NAME -Dsonar.projectVersion=\$(jq -r '.version' package.json) ${env.sonarParams}"
+                  sh '''sed -i "s#/app/src/addons/${GIT_NAME}/##g" xunit-reports-current/coverage/lcov.info'''
+                  sh '''sed -i "s#src/addons/${GIT_NAME}/##g" xunit-reports-current/coverage/lcov.info'''
+                  sh "export PATH=${scannerHome}/bin:${nodeJS}/bin:$PATH; sonar-scanner -Dsonar.javascript.lcov.reportPaths=./xunit-reports-current/coverage/lcov.info -Dsonar.sources=./src -Dsonar.projectKey=$GIT_NAME -Dsonar.projectName=$GIT_NAME -Dsonar.projectVersion=\$(jq -r '.version' package.json) ${env.sonarParams}"
                   sh '''try=5; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}&tags=${SONARQUBE_TAGS}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 15; try=\$(( \$try - 1 )); fi; done'''
                 }
               }
@@ -201,32 +202,34 @@ pipeline {
         }
       }
 
-      stage('Volto 18') {
+      stage('Volto 17') {
         agent { node { label 'integration'} }
         when {
-          environment name: 'SKIP_TESTS', value: ''
-          not { environment name: 'VOLTO18_BREAKING_CHANGES', value: 'yes' }
+          allOf {
+            environment name: 'SKIP_TESTS', value: ''
+            expression { return !!env.PREVIOUS_VOLTO?.trim() }
+          }
         }
         stages {
           stage('Build test image') {
             steps {
-              sh '''docker build --pull --build-arg="VOLTO_VERSION=18-yarn" --build-arg="ADDON_NAME=$NAMESPACE/$GIT_NAME"  --build-arg="ADDON_PATH=$GIT_NAME" . -t $IMAGE_NAME-frontend18'''
+              sh '''docker build --pull --build-arg="VOLTO_VERSION=$PREVIOUS_VOLTO" --build-arg="ADDON_NAME=$NAMESPACE/$GIT_NAME"  --build-arg="ADDON_PATH=$GIT_NAME" . -t $IMAGE_NAME-frontend-previous'''
             }
           }
 
-          stage('Unit tests Volto 18') {
+          stage('Unit tests') {
             steps {
               script {
                 try {
-                  sh '''docker run --name="$IMAGE_NAME-volto18" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend18 test-ci'''
-                  sh '''rm -rf xunit-reports18'''
-                  sh '''mkdir -p xunit-reports18'''
-                  sh '''docker cp $IMAGE_NAME-volto18:/app/src/addons/$GIT_NAME/junit.xml xunit-reports18/'''
+                  sh '''docker run --name="$IMAGE_NAME-volto-previous" --entrypoint=make --workdir=/app/src/addons/$GIT_NAME $IMAGE_NAME-frontend-previous test-ci'''
+                  sh '''rm -rf xunit-reports-previous'''
+                  sh '''mkdir -p xunit-reports-previous'''
+                  sh '''docker cp $IMAGE_NAME-volto-previous:/app/src/addons/$GIT_NAME/junit.xml xunit-reports-previous/'''
                 } finally {
                   catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                    junit testResults: 'xunit-reports18/junit.xml', allowEmptyResults: true
+                    junit testResults: 'xunit-reports-previous/junit.xml', allowEmptyResults: true
                   }
-                  sh script: '''docker rm -v $IMAGE_NAME-volto18''', returnStatus: true
+                  sh script: '''docker rm -v $IMAGE_NAME-volto-previous''', returnStatus: true
                 }
               }
             }
@@ -236,8 +239,8 @@ pipeline {
       }
       post {
         always {
-            sh script: "docker rmi $IMAGE_NAME-frontend", returnStatus: true
-            sh script: "docker rmi $IMAGE_NAME-frontend18", returnStatus: true
+            sh script: "docker rmi $IMAGE_NAME-frontend-current", returnStatus: true
+            sh script: "docker rmi $IMAGE_NAME-frontend-previous", returnStatus: true
         }
       }
     }
