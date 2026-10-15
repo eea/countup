@@ -142,7 +142,7 @@
     "@types/react-dom": "^18.3.1",
     "codecov": "3.8.3",
     "esbuild": "0.12.24",
-    "prettier": "2.3.2",
+    "prettier": "^3.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "@cypress/code-coverage": "^3.10.0",
