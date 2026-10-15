@@ -82,6 +82,9 @@ build:			## Build production bundle
 
 .PHONY: build-deps
 build-deps:		## Build Volto dependencies
+	# @eeacms/countup is a built library used as a Volto addon, so its
+	# lib/ entry must exist before @plone/registry resolves the addon
+	pnpm --filter @eeacms/countup build
 	pnpm --filter @plone/registry --filter @plone/components build
 
 .PHONY: cypress-open
