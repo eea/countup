@@ -16,7 +16,6 @@ website/.yarn/*
 
 node_modules
 build
-
 cypress/videos
 cypress/reports
 screenshots
@@ -25,7 +24,15 @@ videos
 .env.development.local
 .env.test.local
 lib
-node_modules
 .idea
 .env.production.local
 *~
+.*project
+.settings/
+.vscode
+acceptance/cypress/videos/
+acceptance/node_modules
+.storybook-build
+/core
+results
+/public
