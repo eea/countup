@@ -1,10 +1,11 @@
+import { vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import { CountUp } from '.';
 
 describe('CountUp', () => {
-  const children = jest.fn(({ value }) => value);
+  const children = vi.fn(({ value }) => value);
   const fixture = {
     isCounting: true,
     duration: 0.74,
@@ -13,7 +14,7 @@ describe('CountUp', () => {
   };
   beforeEach(() => {
     // IntersectionObserver isn't available in test environment
-    const mockIntersectionObserver = jest.fn();
+    const mockIntersectionObserver = vi.fn();
     mockIntersectionObserver.mockReturnValue({
       observe: () => true,
       unobserve: () => null,
