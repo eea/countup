@@ -35,7 +35,7 @@
   "scripts": {
     "start": "node scripts/serve.js",
     "build": "node scripts/build.js",
-    "prepublish": "yarn build",
+    "prepublish": "pnpm build",
     "prepare": "cd ../.. && husky install || true",
     "release": "release-it",
     "release-major-beta": "release-it major --preRelease=beta",
