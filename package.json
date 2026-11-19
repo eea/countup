@@ -1,7 +1,7 @@
 {
   "name": "@eeacms/countup-dev",
   "private": true,
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "React component and hook to animate counting up or down to a number",
   "author": "European Environment Agency: IDM2 A-Team",
   "homepage": "https://github.com/eea/countup#readme",
