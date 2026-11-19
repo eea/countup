@@ -71,6 +71,19 @@ const { value, reset } = useCountUp({ isCounting: true });
 
 - Node.js: `>=22.0.0`
 
+## Upgrade
+
+### Upgrading to 4.x
+
+> This version requires Node.js 22 and React 18.
+
+The library keeps the same exports (`CountUp`, `useCountUp` and the default export) and the same props and defaults, so upgrading from 3.x needs no code changes. `use-elapsed-time` remains the only runtime dependency.
+
+#### Breaking changes
+
+- **Node.js 22 or newer is required** (`engines.node >= 22`), 3.x declared no engine.
+- **React 18 is required.** The package declares `react` and `react-dom` as `^18.2.0` peers; 3.x accepted `react >=16.8.0`.
+
 ## License
 
 See [LICENSE.md](LICENSE.md) for details.
